@@ -51,31 +51,31 @@ namespace Stocker
         private void InitializeComponent()
         {
             //suspend layout
-            this.SuspendLayout();
+            SuspendLayout();
 
             // 
             // plotGraph
             // 
-            this.plot = new OrderedPlot();
-            this.plot.Location = new Point(0, 0);
-            this.plot.Name = "plot";
-            this.plot.setSize(500, 400);
+            plot = new OrderedPlot();
+            plot.Location = new Point(0, 0);
+            plot.Name = "plot";
+            plot.setSize(500, 400);
 
             //
-            //plotpanel
+            //plotPanel
             //
             Panel plotPanel = new Panel();
             plotPanel.AutoScroll = true;
             plotPanel.Location = new Point(100, 0);
             plotPanel.Size = new Size(500, 400);
-            plotPanel.Controls.Add(this.plot);
+            plotPanel.Controls.Add(plot);
 
             //
             // display
             //
             Display.cout.Location = new Point(100, 400);
             Display.cout.Size = new Size(500, 200);
-            Display.cout.Font = new Font(this.Font.FontFamily, 12, this.Font.Style);
+            Display.cout.Font = new Font(Font.FontFamily, 12, Font.Style);
             Display.cout.ScrollBars = ScrollBars.Both;
             //Note that colors do not appear when textbox is in readonly mode
             Display.cout.ReadOnly = true;
@@ -94,15 +94,15 @@ namespace Stocker
             // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(600, 600);
-            this.Controls.Add(populationPanel);
-            this.Controls.Add(plotPanel);
-            this.Controls.Add(Display.cout);
-            this.Text = "Stocker";
+            ClientSize = new System.Drawing.Size(600, 600);
+            Controls.Add(populationPanel);
+            Controls.Add(plotPanel);
+            Controls.Add(Display.cout);
+            Text = "Stocker";
 
 
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
 
@@ -131,14 +131,13 @@ namespace Stocker
 
         private void addPopulationControls(Population pop, double[] data)
         {
-            this.SuspendLayout();
+            SuspendLayout();
 
             populationPanel.Controls.Clear();
 
-            for (int i = 0; i < pop.size(); i++)
+            for (int i = 0; i < pop.popSize; i++)
             {
                 Individual ind = pop.getInd(i);
-
                 ButtonInd btn = new ButtonInd(pop,data);
                 btn.idx = i;
                 btn.Text = "Ind(" + i + "): " + ind.predict(data,0);
@@ -147,13 +146,13 @@ namespace Stocker
                 populationPanel.Controls.Add(btn);
             }
 
-            this.ResumeLayout();
-            this.PerformLayout();
+            ResumeLayout();
+            PerformLayout();
         }
 
         private void ind_btn_mouseClick(object sender, EventArgs e)
         {
-            this.SuspendLayout();
+            SuspendLayout();
 
             plot.removeAllSeries();
             ButtonInd btn = (ButtonInd)sender;
@@ -165,10 +164,10 @@ namespace Stocker
             plot.addSeries(dataSeries);
             //plot.addSeries(pop.getInd(indIdx).predictionPointSeries());
             //plot.addSeries(pop.getInd(indIdx).predictionDataSeries());
-            this.refreshGraph();
+            refreshGraph();
 
-            this.ResumeLayout();
-            this.PerformLayout();
+            ResumeLayout();
+            PerformLayout();
         }
 
 

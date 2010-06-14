@@ -11,6 +11,8 @@ namespace Stocker.GP
     {
         Individual[] ind;
 
+        public int popSize { get { return ind.Length; } }
+
         public Population() { }
 
         public void initialize(int popSize, Range mathCellSizeRange, int testLength)
@@ -25,10 +27,14 @@ namespace Stocker.GP
             }
         }
 
-        public int size()
+
+        public void sort()
         {
-            return ind.Length;
+
+
         }
+
+
 
         public Individual getInd(int idx)
         {

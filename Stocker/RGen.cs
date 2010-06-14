@@ -52,10 +52,7 @@ namespace Stocker
                     return new ExpressionCell(randOp(), new MathCell[2]{
                         randCell(split,argLength), randCell(cellCount-split,argLength)});
                 }
-
             }
-
-
         }
 
         public OpEnum randOp()

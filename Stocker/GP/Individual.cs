@@ -84,7 +84,7 @@ namespace Stocker.GP
         // | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12| 13| 14| 15| 16| 17| 18| 19|
         // |-------------------------------------------------------------------------------| data.Length (say we have a data array with 20 points)
         //                     | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |...................| testLength(10) : the testLength limits the maximum number of points that are seen by the test
-        //                                                                 trimLength------->the number of points to be ignored from the latest point in the data
+        //                                                                 trimLength------->the number of points to be ignored starting from the last point in the data set
         //                     |...|---------------|...............| * |
         //                         predictionLength  predictionGap   ^----> point to predict
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,13 +130,19 @@ namespace Stocker.GP
         {
             // Data Calculations
             // Example: dataLength = 10, testLength = 7, trimLength = 2
-            // dataLength:  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+            // dataSet:     | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
             // testLength:              | 0 | 1 | 2 | 3 | 4 | 5 | 6 |  (add 3 to offset) (3 = dataLength - testLength)
             // trimLength:      | 0 | 1 | 2 | 3 | 4 | 5 | 6 |          (sub 2 from offset) (2 = trimLength)
             // Therefore, our test set has a length of 7 (from the testLength), and it begins at an offset of 1,
             // which is calculated from:
             //         offset = data.Length - testLength - trimLength 
-            
+
+            if (dataLength < testLength)
+            {
+                throw new Exception("dataLength(" + dataLength.ToString() + ") must be greater than "
+                    + "testlength(" + testLength.ToString() + ")");
+            }
+
             int dataOffset = dataLength - testLength - trimLength;
             
             if (dataOffset < 0)
