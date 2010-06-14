@@ -24,8 +24,7 @@ namespace Stocker
             MouseWheel += new MouseEventHandler(MainForm_MouseWheel);
 
 
-            //TestRun();
-            //TestEvolve();
+
             TestPop();
         }
 
@@ -109,133 +108,28 @@ namespace Stocker
 
         private void TestPop()
         {
-            double[] data = new double[20]
+            double[] data = new double[]
             { 1, 2, 5, 6,10,
               8, 7, 3, 2, 5,
               5, 5,25, 1,10,
-             10,18, 6, 4, 3};
+             10,18, 6, 4, 3,
+              5, 5, 4, 6,10,
+             13,18,27,35,40,
+             38,37,39,36,35};
+            int testLength = 20;
 
-            Population pop = new Population(data);
 
-            pop.initialize(30, 4, 6);
+            Population pop = new Population();
 
+            pop.initialize(30, new Range(3,7), testLength);
             pop.printInfix();
-            //pop.printLisp();
-
-
-
-            addPopulationControls(pop);
+            addPopulationControls(pop,data);
         }
 
 
-        private void TestEvolve()
-        {
-            double[] data = new double[20]
-            { 1, 2, 5, 6,10,
-              8, 7, 3, 2, 5,
-              5, 5,25, 1,10,
-             10,18, 6, 4, 3};
-
-            Individual predictor = new Individual(data);
-            predictor.initialize(2, 4);
-            double prediction = predictor.predict();
-
-            //Create a series for the data
-            Series dataSeries = new Series(0, data);
-            dataSeries.style.showPoints = false;
 
 
-            //Create the prediction point
-            Series predictionPoint = new Series(data.Length - 1, new double[1] { prediction });
-            predictionPoint.style.showPoints = true;
-            predictionPoint.style.pointColor = Color.LightGreen;
-
-            //create the prediction series
-            //Display.cout.writeLine("m = " + predictor.getM());
-            double[] predictionData = new double[predictor.getTimeAnalyzed()];
-            for (int i = 0; i < predictionData.Length; i++)
-            {
-                //Display.cout.writeLine("data[" + i.ToString() + "] = " + data[i].ToString());
-                predictionData[i] = data[i];
-            }
-            Series predictionSeries = new Series(0, predictionData);
-            predictionSeries.style.showLines = false;
-            predictionSeries.style.showPoints = true;
-            predictionSeries.style.pointColor = Color.LightBlue;
-
-
-            plot.addSeries(dataSeries);
-            plot.addSeries(predictionPoint);
-            plot.addSeries(predictionSeries);
-
-            Display.cout.writeLine("Predicting Value: " + prediction.ToString());
-            Display.cout.writeLine("Actual Value: " + data.Last().ToString());
-
-
-
-        }
-
-
-        private void TestRun()
-        {
-            try
-            {
-                DoubleCell dc2 = new DoubleCell(2);
-                DoubleCell dc3 = new DoubleCell(3);
-                DoubleCell dc4 = new DoubleCell(4);
-                MathCell[] argSet1 = new MathCell[2] { dc2, dc3 };
-
-
-                ExpressionCell ecMult = new ExpressionCell(OpEnum.mult, argSet1);
-
-                MathCell[] argSet2 = new MathCell[2];
-                argSet2[0] = ecMult;
-                argSet2[1] = dc4;
-
-                ExpressionCell ecAdd = new ExpressionCell(OpEnum.add, argSet2);
-
-                VariableCell vc0 = new VariableCell(0);
-                MathCell[] argSet3 = new MathCell[2];
-                argSet3[0] = vc0;
-                argSet3[1] = ecAdd;
-
-                ExpressionCell ecFull = new ExpressionCell(OpEnum.add, argSet3);
-
-                //Print the expression
-                ecFull.printLisp();
-                Display.cout.writeLine();
-
-                //Graph the function
-                double[] data = new double[20];
-                for (int i = 0; i < data.Length; i++)
-                {
-                    data[i] = ecFull.eval(new double[1] { (float)i });
-                }
-
-                plot.addSeries(new Series(0, data));
-
-
-                /////////////////////
-                MathCell squared = getSquared();
-
-                squared.printLisp();
-                Display.cout.writeLine();
-
-                //Graph the function
-                for (int i = 0; i < data.Length; i++)
-                {
-                    data[i] = squared.eval(new double[1] { (float)i });
-                }
-
-                plot.addSeries(new Series(0, data));
-            }
-            catch (Exception ex)
-            {
-                Display.cout.writeLine("Error in calculation...\n" + ex.Message);
-            }
-        }
-
-        private void addPopulationControls(Population pop)
+        private void addPopulationControls(Population pop, double[] data)
         {
             this.SuspendLayout();
 
@@ -245,9 +139,9 @@ namespace Stocker
             {
                 Individual ind = pop.getInd(i);
 
-                ButtonInd btn = new ButtonInd(pop);
+                ButtonInd btn = new ButtonInd(pop,data);
                 btn.idx = i;
-                btn.Text = "Ind(" + i + "): " + ind.predict();
+                btn.Text = "Ind(" + i + "): " + ind.predict(data,0);
                 btn.MouseClick += new MouseEventHandler(ind_btn_mouseClick);
                 btn.Location = new Point(0, i * btn.Height);
                 populationPanel.Controls.Add(btn);
@@ -264,12 +158,13 @@ namespace Stocker
             plot.removeAllSeries();
             ButtonInd btn = (ButtonInd)sender;
             Population pop = btn.pop;
+            double[] data = btn.data;
             int indIdx = btn.idx;
 
-            Series dataSeries = new Series(0, pop.getData());
+            Series dataSeries = new Series(0, data);
             plot.addSeries(dataSeries);
-            plot.addSeries(pop.getInd(indIdx).predictionPointSeries());
-            plot.addSeries(pop.getInd(indIdx).predictionDataSeries());
+            //plot.addSeries(pop.getInd(indIdx).predictionPointSeries());
+            //plot.addSeries(pop.getInd(indIdx).predictionDataSeries());
             this.refreshGraph();
 
             this.ResumeLayout();
@@ -304,10 +199,12 @@ namespace Stocker
     {
         public int idx;
         public Population pop;
-        public ButtonInd(Population pop)
+        public double[] data;
+        public ButtonInd(Population pop, double[] data)
             : base()
         {
             this.pop = pop;
+            this.data = data;
         }
     }
 }

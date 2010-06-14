@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="GP\Argument.cs" />
     <Compile Include="GP\Candidate.cs" />
+    <Compile Include="GP\GAParams.cs" />
     <Compile Include="GP\Population.cs" />
     <Compile Include="GP\Individual.cs" />
     <Compile Include="GP\Optimizer.cs" />

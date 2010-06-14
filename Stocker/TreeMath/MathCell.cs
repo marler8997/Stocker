@@ -12,23 +12,21 @@ namespace Stocker.TreeMath
 
 
 
+    //
+    // MathCell
+    //
+
     public interface MathCell
     {
-        double eval(double[] args);
+        double eval(double[] args, int argOffset);
         void printLisp();
         void printInfix();
         
     }
 
 
-
-
-
     public class VariableCell : MathCell
     {
-
-
-
         int argIndex;
 
         public VariableCell(int argIndex)
@@ -36,22 +34,20 @@ namespace Stocker.TreeMath
             this.argIndex = argIndex;
         }
 
-        public double eval(double[] args)
+        public double eval(double[] args, int argOffset)
         {
             try
             {
-                return args[argIndex];
+                return args[argIndex + argOffset];
             }
             catch (IndexOutOfRangeException iore)
             {
                 Display.cout.writeLine(iore.Message + "In evaluation of a variable cell, the provided argument list has " +
                     args.Length.ToString() + " argument(s), but the current variable cell has an index of " +
-                    argIndex.ToString());
+                    argIndex.ToString() + " plus the offset " + argOffset.ToString() + " which is " + (argIndex+argOffset).ToString());
                 return -1;
             }
         }
-
-
 
         public void printLisp()
         {
@@ -74,7 +70,7 @@ namespace Stocker.TreeMath
             this.val = val;
         }
 
-        public double eval(double[] args)
+        public double eval(double[] args, int argOffset)
         {
             return val;
         }
@@ -151,14 +147,14 @@ namespace Stocker.TreeMath
 
 
 
-        public double eval(double[] args)
+        public double eval(double[] args, int argOffset)
         {
             switch (op)
             {
                 case OpEnum.add:
-                    return operationArgs[0].eval(args) + operationArgs[1].eval(args);
+                    return operationArgs[0].eval(args, argOffset) + operationArgs[1].eval(args, argOffset);
                 case OpEnum.mult:
-                    return operationArgs[0].eval(args) * operationArgs[1].eval(args);
+                    return operationArgs[0].eval(args, argOffset) * operationArgs[1].eval(args, argOffset);
                 default:
                     throw new Exception("The expression op: " + op.ToString() + " is unrecognized.");
             }

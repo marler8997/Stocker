@@ -10,25 +10,18 @@ namespace Stocker.GP
     class Population
     {
         Individual[] ind;
-        double[] data;
 
-        public Population(double[] data)
-        {
-            this.data = data;
-        }
+        public Population() { }
 
-        public double[] getData()
+        public void initialize(int popSize, Range mathCellSizeRange, int testLength)
         {
-            return data;
-        }
-
-        public void initialize(int popSize, int minCells, int maxCells)
-        {
+            //Create the population array
             this.ind = new Individual[popSize];
+            
             for (int i = 0; i < this.ind.Length; i++)
             {
-                this.ind[i] = new Individual(data);
-                this.ind[i].initialize(minCells, maxCells);
+                this.ind[i] = new Individual();
+                this.ind[i].initialize(mathCellSizeRange, testLength);
             }
         }
 
@@ -60,4 +53,15 @@ namespace Stocker.GP
             }
         }
     }
+
+    class Range
+    {
+        public int min, max;
+        public Range(int min, int max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+    }
+
 }

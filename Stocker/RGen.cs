@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Stocker.TreeMath;
+using Stocker.GP;
 
 namespace Stocker
 {
@@ -18,22 +19,19 @@ namespace Stocker
 
         QuickCoin quickCoin;
 
-        public MathCell newRandMathCell(int minCells, int maxCells, int timeAnalyzed)
+        public MathCell newRandMathCell(Range mathCellSizeRange, int argLength)
         {
-            //pick a random number between 6 and 12;
-            int cellCount = RGen.gen.Next(minCells,maxCells);
-
-            return randCell(cellCount, timeAnalyzed);
+            return randCell(RGen.gen.Next(mathCellSizeRange.min, mathCellSizeRange.max), argLength);
         }
 
-        private MathCell randCell(int cellCount, int timeAnalyzed)
+        private MathCell randCell(int cellCount, int argLength)
         {
             if (cellCount <= 1)
             {
                 //must return either a variable or a double cell
                 if (quickCoin.flip())
                 {
-                    return new VariableCell(Next(0, timeAnalyzed - 1));
+                    return new VariableCell(Next(0, argLength - 1));
                 }
                 else
                 {
@@ -46,13 +44,13 @@ namespace Stocker
                 if (cellCount == 2)
                 {
                     return new ExpressionCell(randOp(), new MathCell[2]{
-                        randCell(1,timeAnalyzed), randCell(1,timeAnalyzed)});
+                        randCell(1,argLength), randCell(1,argLength)});
                 }
                 else
                 {
                     int split = Next(2, cellCount - 1);
                     return new ExpressionCell(randOp(), new MathCell[2]{
-                        randCell(split,timeAnalyzed), randCell(cellCount-split,timeAnalyzed)});
+                        randCell(split,argLength), randCell(cellCount-split,argLength)});
                 }
 
             }
