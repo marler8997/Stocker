@@ -16,6 +16,13 @@ namespace Stocker.GP
 
         public Individual() { }
 
+        public int fitness
+        {
+            get 
+            { 
+                throw new Exception("not implemented yet.");                 
+            }
+        }
 
         public void initialize(Range mathCellSizeRange, int testLength)
         {

@@ -20,7 +20,7 @@ namespace Stocker.GP
             //Create the population array
             this.ind = new Individual[popSize];
             
-            for (int i = 0; i < this.ind.Length; i++)
+            for (int i = 0; i < this.popSize; i++)
             {
                 this.ind[i] = new Individual();
                 this.ind[i].initialize(mathCellSizeRange, testLength);
@@ -28,11 +28,28 @@ namespace Stocker.GP
         }
 
 
-        public void sort()
+        public void bubbleSort()
         {
-
-
+            bool swapped = true;
+            int j = 0;
+            Individual tmp;
+            while (swapped)
+            {
+                swapped = false;
+                j++;
+                for (int i = 0; i < popSize - j; i++)
+                {
+                    if (ind[i].fitness > ind[i + 1].fitness)
+                    {
+                        tmp = ind[i];
+                        ind[i] = ind[i + 1];
+                        ind[i + 1] = tmp;
+                        swapped = true;
+                    }
+                }
+            }
         }
+
 
 
 
