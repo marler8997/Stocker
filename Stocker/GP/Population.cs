@@ -27,6 +27,31 @@ namespace Stocker.GP
             }
         }
 
+        public void scaleIndividuals(double[] data, int numberOfPredictions)
+        {
+            foreach (Individual i in ind)
+            {
+                i.generatePredictions(data, numberOfPredictions);
+                i.scaleFromLastPredictions(data);
+            }
+        }
+
+        public void calculateFitnessFromLastPredictions(double[] data)
+        {
+            foreach (Individual i in ind)
+            {
+                i.calculateFitnessFromLastPredictions(data);
+            }
+        }
+       
+        public void calculateFitness(double[] data, int numberOfPredictions)
+        {
+            foreach (Individual i in ind)
+            {
+                i.calculateFitness(data, numberOfPredictions);
+            }
+        }
+
 
         public void bubbleSort()
         {
@@ -39,7 +64,7 @@ namespace Stocker.GP
                 j++;
                 for (int i = 0; i < popSize - j; i++)
                 {
-                    if (ind[i].fitness > ind[i + 1].fitness)
+                    if (ind[i].getLastFitness() > ind[i + 1].getLastFitness())
                     {
                         tmp = ind[i];
                         ind[i] = ind[i + 1];
@@ -47,6 +72,14 @@ namespace Stocker.GP
                         swapped = true;
                     }
                 }
+            }
+        }
+
+        public void runPredictions(double[] data, int trimLength)
+        {
+            foreach (Individual i in ind)
+            {
+                i.predict(data, trimLength);
             }
         }
 

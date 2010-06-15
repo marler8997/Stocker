@@ -24,3 +24,12 @@ C:\Documents and Settings\marlerj\My Documents\Visual Studio 2010\Projects\Stock
 C:\Documents and Settings\marlerj\My Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\Stocker.Properties.Resources.resources
 C:\Documents and Settings\marlerj\My Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\GenerateResource.read.1.tlog
 C:\Documents and Settings\marlerj\My Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\Stocker.exe
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\Stocker.pdb
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\Stocker.MainForm.resources
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\Stocker.Properties.Resources.resources
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\bin\Debug\Stocker.exe
+C:\Users\Administrator\Documents\Visual Studio 2010\Projects\Stocker\Stocker\bin\Debug\Stocker.pdb

@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="GP\Argument.cs" />
     <Compile Include="GP\Candidate.cs" />
-    <Compile Include="GP\GAParams.cs" />
     <Compile Include="GP\Population.cs" />
     <Compile Include="GP\Individual.cs" />
     <Compile Include="GP\Optimizer.cs" />
@@ -94,7 +93,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RGen.cs" />
+    <Compile Include="GP\RGen.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

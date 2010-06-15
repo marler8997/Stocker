@@ -11,18 +11,21 @@ namespace Stocker.GP
     class Individual
     {
         //Individual Representation
-        MathCell dataFunction;
-        TestConfiguration testConfig;
+        private MathCell dataFunction;
+        private TestConfiguration testConfig;
+        private double[] lastPredictions;
+        private double lastFitness;
 
-        public Individual() { }
-
-        public int fitness
+        public double[] getLastPredictions()
         {
-            get 
-            { 
-                throw new Exception("not implemented yet.");                 
-            }
+            return lastPredictions;
         }
+        public double getLastFitness()
+        {
+            return lastFitness;
+        }
+
+        public Individual() { }     
 
         public void initialize(Range mathCellSizeRange, int testLength)
         {
@@ -32,11 +35,82 @@ namespace Stocker.GP
         }
 
 
+        public void generatePredictions(double[] data, int numberOfPredictions)
+        {
+            lastPredictions = new double[numberOfPredictions];
+            for (int i = 0; i < lastPredictions.Length; i++)
+            {
+                lastPredictions[i] = predict(data, lastPredictions.Length - 1 - i);
+            }
+        }
+
+        //todo: to get the best possible scaler, you must also consider the negative reflected
+        //      line.  How can this be dealt with?
+        public void scaleFromLastPredictions(double[] data)
+        {
+            int predictionOffset = data.Length - lastPredictions.Length;
+            double avgDifference = 0;
+
+            Display.cout.write("old: ");
+            foreach (double p in lastPredictions)
+            {
+                Display.cout.write((data[predictionOffset] - p).ToString() + ", ");
+                avgDifference += data[predictionOffset] - p;
+                predictionOffset++;
+            }
+            Display.cout.writeLine();
+
+            avgDifference /= lastPredictions.Length;
+            Display.cout.writeLine("ave diff: " + avgDifference.ToString());
+
+            DoubleCell scaler = new DoubleCell(avgDifference);
+            ExpressionCell scaledFunction = new ExpressionCell(OpEnum.add,
+                new MathCell[2] {scaler, dataFunction} );
+            dataFunction = scaledFunction;
+        }
+
+        public void calculateFitness(double[] data, int numberOfPredictions)
+        {
+            generatePredictions(data, numberOfPredictions);
+            calculateFitnessFromLastPredictions(data);
+        }
+
+        public void calculateFitnessFromLastPredictions(double[] data)
+        {
+            int predictionOffset = data.Length - lastPredictions.Length;
+            lastFitness = 0;
+            foreach(double p in lastPredictions) 
+            { 
+                lastFitness += Math.Abs(data[predictionOffset] - p);
+                
+
+                Display.cout.write("fit: ");
+                Display.cout.write(Math.Abs(data[predictionOffset] - p).ToString() + ", ");
+                Display.cout.writeLine();
+
+                predictionOffset++;
+            }
+        }
+
         public double predict(double[] data, int trimLength)
         {
             int dataOffset = testConfig.calculateDataOffset(data.Length,trimLength);
-            return Math.Abs(dataFunction.eval(data, dataOffset));
+            return  Math.Abs(dataFunction.eval(data, dataOffset));
         }
+
+
+        public Series getSeriesOfLastPredictions(int dataLength)
+        {
+            //Create the prediction data series
+            Series predictionSeries = new Series(lastPredictions, dataLength - lastPredictions.Length);
+            predictionSeries.style.showLines = false;
+            predictionSeries.style.showPoints = true;
+            predictionSeries.style.pointColor = Color.LightBlue;
+
+            return predictionSeries;
+        }
+
+
 
         public void printInfix()
         {
@@ -48,35 +122,6 @@ namespace Stocker.GP
             dataFunction.printLisp();
         }
 
-
-        /*
-        public Series predictionPointSeries()
-        {
-            //Create the prediction point series
-            Series pointSeries = new Series(data.Length - 1, new double[1] { predict() });
-            pointSeries.style.showPoints = true;
-            pointSeries.style.pointColor = Color.LightGreen;
-            return pointSeries;
-        }
-
-        public Series predictionDataSeries()
-        {
-            //Create the prediction data series
-            int offset = startTime();
-
-            double[] predictionData = new double[getTimeAnalyzed()];
-            for (int i = 0; i < predictionData.Length; i++)
-            {
-                predictionData[i] = data[i + offset];
-            }
-            Series predictionSeries = new Series(offset, predictionData);
-            predictionSeries.style.showLines = false;
-            predictionSeries.style.showPoints = true;
-            predictionSeries.style.pointColor = Color.LightBlue;
-
-            return predictionSeries;
-        }
-        */
 
         public void mutate()
         {

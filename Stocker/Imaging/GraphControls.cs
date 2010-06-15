@@ -31,13 +31,17 @@ namespace Stocker.Imaging
         double min, max;
         public SeriesStyle style;
 
-        public Series(int offset, double[] arr)
+
+        public Series(double[] arr, int offset)
         {
             this.style = new SeriesStyle();
             this.offset = offset;
             this.arr = arr;
             findMinMax();
         }
+
+
+        public Series(double[] arr) : this(arr, 0) { }
 
         public int Length()
         {

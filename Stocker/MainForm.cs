@@ -19,11 +19,8 @@ namespace Stocker
         {
             InitializeComponent();
 
-
             //setup mouse event
             MouseWheel += new MouseEventHandler(MainForm_MouseWheel);
-
-
 
             TestPop();
         }
@@ -60,6 +57,10 @@ namespace Stocker
             plot.Location = new Point(0, 0);
             plot.Name = "plot";
             plot.setSize(500, 400);
+
+            //
+            // ***********************Add plot label...
+
 
             //
             //plotPanel
@@ -108,6 +109,8 @@ namespace Stocker
 
         private void TestPop()
         {
+            /*
+            int numberOfTests = 10;            
             double[] data = new double[]
             { 1, 2, 5, 6,10,
               8, 7, 3, 2, 5,
@@ -116,13 +119,28 @@ namespace Stocker
               5, 5, 4, 6,10,
              13,18,27,35,40,
              38,37,39,36,35};
-            int testLength = 20;
+             */
+            int numberOfTests = 10;
+            double[] data = new double[]
+            { 5, 5, 5, 5, 5,
+              5, 5, 5, 5, 5,
+              5, 5, 5, 5, 5,
+              5, 5, 5, 5, 5,
+              5, 5, 5, 5, 5,
+              5, 5, 5, 5, 5,
+              5, 5, 5, 5, 5};
 
+            int testLength = data.Length - numberOfTests;
 
             Population pop = new Population();
 
             pop.initialize(30, new Range(3,7), testLength);
-            pop.printInfix();
+            //pop.printInfix();
+            pop.scaleIndividuals(data, numberOfTests);
+            pop.calculateFitness(data, numberOfTests);
+
+            pop.bubbleSort();
+
             addPopulationControls(pop,data);
         }
 
@@ -133,14 +151,13 @@ namespace Stocker
         {
             SuspendLayout();
 
-            populationPanel.Controls.Clear();
+            populationPanel.Controls.Clear();            
 
             for (int i = 0; i < pop.popSize; i++)
             {
                 Individual ind = pop.getInd(i);
-                ButtonInd btn = new ButtonInd(pop,data);
-                btn.idx = i;
-                btn.Text = "Ind(" + i + "): " + ind.predict(data,0);
+                ButtonInd btn = new ButtonInd(ind,data);
+                btn.Text = "(" + i + "): " + ind.getLastFitness();
                 btn.MouseClick += new MouseEventHandler(ind_btn_mouseClick);
                 btn.Location = new Point(0, i * btn.Height);
                 populationPanel.Controls.Add(btn);
@@ -156,15 +173,23 @@ namespace Stocker
 
             plot.removeAllSeries();
             ButtonInd btn = (ButtonInd)sender;
-            Population pop = btn.pop;
+            Individual ind = btn.ind;
             double[] data = btn.data;
-            int indIdx = btn.idx;
+            
+            //Clear Display and print individuals equation, fitness, and prediction values
+            Display.cout.Clear();
+            ind.printInfix();
+            Display.cout.writeLine();
+            Display.cout.writeLine("Fitness: " + ind.getLastFitness().ToString());
+            Display.cout.write("Predictions: ");
+            foreach(double p in ind.getLastPredictions()) { Display.cout.write(p.ToString() + ", "); }
+            Display.cout.writeLine();
 
-            Series dataSeries = new Series(0, data);
+            //Graph the individual and its predictions
+            Series dataSeries = new Series(data);
             plot.addSeries(dataSeries);
-            //plot.addSeries(pop.getInd(indIdx).predictionPointSeries());
-            //plot.addSeries(pop.getInd(indIdx).predictionDataSeries());
-            refreshGraph();
+            plot.addSeries(ind.getSeriesOfLastPredictions(data.Length));
+            refreshGraph();            
 
             ResumeLayout();
             PerformLayout();
@@ -196,13 +221,12 @@ namespace Stocker
 
     class ButtonInd : Button
     {
-        public int idx;
-        public Population pop;
+        public Individual ind;
         public double[] data;
-        public ButtonInd(Population pop, double[] data)
+        public ButtonInd(Individual ind, double[] data)
             : base()
         {
-            this.pop = pop;
+            this.ind = ind;
             this.data = data;
         }
     }
