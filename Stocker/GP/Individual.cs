@@ -51,17 +51,13 @@ namespace Stocker.GP
             int predictionOffset = data.Length - lastPredictions.Length;
             double avgDifference = 0;
 
-            Display.cout.write("old: ");
             foreach (double p in lastPredictions)
             {
-                Display.cout.write((data[predictionOffset] - p).ToString() + ", ");
                 avgDifference += data[predictionOffset] - p;
                 predictionOffset++;
             }
-            Display.cout.writeLine();
 
             avgDifference /= lastPredictions.Length;
-            Display.cout.writeLine("ave diff: " + avgDifference.ToString());
 
             DoubleCell scaler = new DoubleCell(avgDifference);
             ExpressionCell scaledFunction = new ExpressionCell(OpEnum.add,
@@ -82,12 +78,6 @@ namespace Stocker.GP
             foreach(double p in lastPredictions) 
             { 
                 lastFitness += Math.Abs(data[predictionOffset] - p);
-                
-
-                Display.cout.write("fit: ");
-                Display.cout.write(Math.Abs(data[predictionOffset] - p).ToString() + ", ");
-                Display.cout.writeLine();
-
                 predictionOffset++;
             }
         }
@@ -95,7 +85,7 @@ namespace Stocker.GP
         public double predict(double[] data, int trimLength)
         {
             int dataOffset = testConfig.calculateDataOffset(data.Length,trimLength);
-            return  Math.Abs(dataFunction.eval(data, dataOffset));
+            return  dataFunction.eval(data, dataOffset);
         }
 
 

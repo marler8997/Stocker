@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Stocker.Imaging;
 using Stocker.TreeMath;
 using Stocker.GP;
+using Stocker.FileIO;
 
 namespace Stocker
 {
@@ -14,6 +15,7 @@ namespace Stocker
     {
         private OrderedPlot plot;
         private Panel populationPanel;
+        private MainMenu mainMenu;
 
         public MainForm()
         {
@@ -91,6 +93,25 @@ namespace Stocker
             populationPanel.Size = new Size(100, 600);
 
 
+            //
+            //mainMenu
+            //
+            mainMenu = new MainMenu();
+            
+            MenuItem fileItem = new MenuItem("File");
+            mainMenu.MenuItems.Add(fileItem);
+
+            MenuItem openItem = new MenuItem("Open");
+            fileItem.MenuItems.Add(openItem);
+
+            MenuItem exitItem = new MenuItem("Exit");
+            fileItem.MenuItems.Add(exitItem);
+
+            //add event handlers for the menu item
+
+            exitItem.Click += new EventHandler(windowClose);
+            openItem.Click += new EventHandler(openFile);
+
 
             // 
             // MainForm
@@ -99,6 +120,7 @@ namespace Stocker
             Controls.Add(populationPanel);
             Controls.Add(plotPanel);
             Controls.Add(Display.cout);
+            Menu = mainMenu;
             Text = "Stocker";
 
 
@@ -109,7 +131,6 @@ namespace Stocker
 
         private void TestPop()
         {
-            /*
             int numberOfTests = 10;            
             double[] data = new double[]
             { 1, 2, 5, 6,10,
@@ -119,16 +140,7 @@ namespace Stocker
               5, 5, 4, 6,10,
              13,18,27,35,40,
              38,37,39,36,35};
-             */
-            int numberOfTests = 10;
-            double[] data = new double[]
-            { 5, 5, 5, 5, 5,
-              5, 5, 5, 5, 5,
-              5, 5, 5, 5, 5,
-              5, 5, 5, 5, 5,
-              5, 5, 5, 5, 5,
-              5, 5, 5, 5, 5,
-              5, 5, 5, 5, 5};
+
 
             int testLength = data.Length - numberOfTests;
 
@@ -185,6 +197,7 @@ namespace Stocker
             foreach(double p in ind.getLastPredictions()) { Display.cout.write(p.ToString() + ", "); }
             Display.cout.writeLine();
 
+
             //Graph the individual and its predictions
             Series dataSeries = new Series(data);
             plot.addSeries(dataSeries);
@@ -217,6 +230,21 @@ namespace Stocker
 
         }
 
+
+        /////////////////////
+        // Window Events
+        /////////////////////
+        public void windowClose(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        public void openFile(object sender, EventArgs e)
+        {
+            Parser.openFileData();
+        }
+
+
     }
 
     class ButtonInd : Button
@@ -230,4 +258,5 @@ namespace Stocker
             this.data = data;
         }
     }
+
 }
